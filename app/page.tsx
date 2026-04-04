@@ -77,7 +77,7 @@ const page = () => {
               className="h-[35vh] rounded-2xl border-2 border-gray-300 "
             />
           </motion.div>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="md:grid grid-cols-5 gap-2">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
