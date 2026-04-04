@@ -1,8 +1,16 @@
 "use client";
 import * as THREE from "three";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
+import SeeMoreButton from "./components/SeeMoreButton";
+import { motion } from "framer-motion";
+import {
+  OrbitControls,
+  Environment,
+  useGLTF,
+  useAnimations,
+} from "@react-three/drei";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 function Bureau({
   url,
@@ -12,36 +20,74 @@ function Bureau({
   position: [number, number, number];
 }) {
   const meshRef = useRef<THREE.Group>(null);
-  const { scene } = useGLTF(url);
+  const { scene, animations } = useGLTF(url);
+
+  // 1. Charger les animations liées au groupe
+  const { actions } = useAnimations(animations, meshRef);
+
+  useEffect(() => {
+    // On vérifie si des animations existent
+    if (animations && animations.length > 0 && actions) {
+      // On récupère le nom du premier clip ("Take 001")
+      const animName = animations[0].name;
+
+      // On lance l'action correspondante
+      actions[animName]?.play();
+      console.log("Animation lancée :", animName);
+    }
+  }, [actions]);
+
   return (
-    <primitive
-      ref={meshRef}
-      object={scene.clone()}
-      position={position}
-      scale={0.05}
-    />
+    <primitive ref={meshRef} object={scene} position={position} scale={0.06} />
   );
 }
 
 const page = () => {
   const [isGrabbing, setIsGrabbing] = useState(false);
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/Yvan Wildis Ngone Tchinda Lebenslauf.pdf"; // Chemin vers votre fichier PDF dans le dossier public
+    link.download = "Yvan Wildis Ngone Tchinda Lebenslauf.pdf"; // Nom du fichier lors du téléchargement
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="p-2">
-      <section className="grid grid-cols-6 ">
-        <div className="grid col-span-4 grid-rows-2 w-full p-1 gap-2">
-          <div className="flex bg-slate-50 dark:bg-black row-span-1 justify-end items-end border-2 border-gray-300 rounded-2xl p-4 gap-2">
-            <h1 className="text-6xl font-bold text-slate-900 dark:text-slate-100 uppercase">
+      <section className="grid md:grid-cols-6 ">
+        <div className="md:grid md:col-span-4 md:grid-rows-2 w-full p-1 gap-2">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex bg-slate-50 dark:bg-black row-span-1 justify-end items-end border-2 border-gray-300 rounded-2xl p-4 gap-2"
+          >
+            <h1 className="md:text-6xl inset-0 font-bold text-slate-900 dark:text-slate-100 uppercase">
               Yvan Wildis <br /> Ngone Tchinda
             </h1>
-            <p></p>
+
             <img
-              src="/picture.heic"
+              src="/picture.jpg"
               alt="profile picture"
               className="h-[35vh] rounded-2xl border-2 border-gray-300 "
             />
-          </div>
+          </motion.div>
           <div className="grid grid-cols-5 gap-2">
-            <div className="col-span-3 row-span-2 h-full p-4 border-2 border-gray-200 rounded-2xl  ">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.95 }}
+              className="col-span-3 row-span-2 h-full p-4 border-2 border-gray-200 rounded-2xl "
+            >
+              <h1 className="text-xl font-bold">Profile</h1>
               <p>
                 Passionate full-stack developer and electrical engineering
                 student with in-depth knowledge of web development and Flutter.
@@ -52,18 +98,64 @@ const page = () => {
                 technical understanding to innovative projects and actively
                 shape the digital transformation.{" "}
               </p>
-            </div>
-            <div className="col-span-2 row-span-2 dark:bg-white/20 h-full p-4 border-2 border-gray-300 rounded-2xl bg-slate-200 ">
-              <a className="text-blue-400" href="mailto:yvanngone53@gmail.com">
-                yvanngone53@gmail.com
-              </a>
-              <br />
-              <a href="tel:+4915757528515">+4915757528515</a>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex justify-evenly flex-col col-span-2 row-span-2 dark:bg-white/20 h-full p-4 border-2 border-gray-300 rounded-2xl bg-slate-200 break-words"
+            >
+              <h1 className="text-2xl font-bold">Contact</h1>
+              <a>yvanngone53@gmail.com</a>
+              <a>+4915757528515</a>
               <p>Hamm</p>
-            </div>
+              <button
+                onClick={handleDownload}
+                className="bg-slate-400 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded-2xl"
+              >
+                Download CV
+              </button>
+              <div className="justify-evenly space-x-4 flex">
+                <a
+                  href="https://github.com/yvankraft"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaGithub className="text-4xl text-slate-400 hover:text-slate-800 hover:scale-110" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/yvan-ngone-271b2b30b/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaLinkedin className="text-4xl text-slate-400 hover:text-slate-800 hover:scale-110" />
+                </a>
+                <a
+                  href="https://x.com/wildisyvan53?s=11"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTwitter className="text-4xl text-slate-400 hover:text-slate-800 hover:scale-110" />
+                </a>
+              </div>
+              <p className="text-center text-slate-400 hidden md:block text-sm">
+                &copy; 2025 Yvan Wildis Ngone Tchinda
+              </p>
+            </motion.div>
           </div>
         </div>
-        <div className="grid col-span-2 p-4 dark:bg-black border-2 border-gray-300 bg-slate-50 rounded-2xl ">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.95 }}
+          className="grid col-span-2 p-4 dark:bg-black border-2 border-gray-300 bg-slate-50 rounded-2xl "
+        >
           <h1 className="font-bold">EDUCATIONAL PATHWAY</h1>
           <h2 className="font-bold">STUDIES IN ELECTRICAL ENGINEERING</h2>
           <h3 className="font-bold">FH South Westphalia, Soest</h3>
@@ -117,19 +209,46 @@ const page = () => {
               German
             </li>
           </ul>
-        </div>
+        </motion.div>
       </section>
       <section
         className={`h-[60vh] ${isGrabbing ? "cursor-grabbing" : "cursor-pointer"}`}
         onPointerDown={() => setIsGrabbing(true)}
         onPointerUp={() => setIsGrabbing(false)}
       >
-        <Canvas camera={{ position: [-7, 3, 9], fov: 50 }}>
+        <Canvas
+          className=" inset-0"
+          camera={{ position: [-7, 4.5, 9], fov: 50 }}
+        >
           <Bureau url="/bureau.glb" position={[1, 0, 0]} />
           <OrbitControls enableZoom={false} />
           <Environment preset="apartment" />
         </Canvas>
       </section>
+      <motion.section
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.1 }}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.95 }}
+        className="w-80% mx-auto mt-4 border-2 border-gray-300 rounded-2xl  bg-slate-50 dark:bg-black overflow-hidden mb-10"
+      >
+        <img src="/pf.png" alt="image" />
+        <div className="flex flex-col justify-evenly p-4 ">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 uppercase p-4">
+            PROJECTS
+          </h1>
+          <p className="p-4">
+            <span className="font-bold">Personal Portfolio Website:</span> A
+            personal portfolio website built with React and Next.js, showcasing
+            my projects, skills, and experience. The website is designed to be
+            responsive and visually appealing, providing an engaging user
+            experience.
+          </p>
+          <SeeMoreButton href="https://pfwildis1.vercel.app" text="See More" />
+        </div>
+      </motion.section>
     </div>
   );
 };
