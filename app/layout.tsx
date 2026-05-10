@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CV - Yvan Wildis Ngone Tchinda",
+  title: "Yvan Wildis Ngone Tchinda",
   description: "this is my cv",
 };
 
@@ -27,6 +27,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <meta
+        name="google-site-verification"
+        content="5C0azqD_vgEcB1y2s45UTbFiDpLQ2upyyGrOrTIXEOw"
+      />
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
