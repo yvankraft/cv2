@@ -1,6 +1,5 @@
 "use client";
-import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "motion/react";
 
 interface Props {
   href: string;
@@ -32,7 +31,7 @@ export default function SeeMoreButton({ href, text }: Props) {
         initial="rest"
         whileHover="hover"
         whileTap="pressed"
-        className="mt-4 px-4 py-2 flex flex-row items-center gap-2 bg-slate-600 hover:bg-slate-500 text-white transition-colors duration-300 group rounded-2xl"
+        className="mt-4 px-4 py-2 flex flex-row items-center gap-2 bg-black hover:bg-gray-800 text-white transition-colors duration-300 group rounded-2xl"
       >
         <span className=" md:text-sm font-bold uppercase tracking-wider whitespace-nowrap ">
           {text}
